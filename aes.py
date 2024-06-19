@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.backends import default_backend
 import os
 
-folder = "./test/"
+folder = './test/'
 
 
 def generate_aes_key():
