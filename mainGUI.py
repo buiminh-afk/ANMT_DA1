@@ -1,19 +1,24 @@
 import customtkinter
 import tkinter
 from tkinter import filedialog
+import module
 
 filePath = None
 encryptFile = None
 decryptFile = None
 KprivateFile = None
 
+
 def createButton(app, x, y, text, command):
-    button = customtkinter.CTkButton(master=app, text=text, command=command, corner_radius=30)
+    button = customtkinter.CTkButton(
+        master=app, text=text, command=command, corner_radius=30)
     button.place(relx=x, rely=y, anchor=tkinter.CENTER)
+
 
 def createLabel(app, x, y, text):
     label = customtkinter.CTkLabel(master=app, text=text)
     label.place(relx=x, rely=y, anchor=tkinter.CENTER)
+
 
 def selectFile(fileType, window):
     filePath = filedialog.askopenfilename()
@@ -23,6 +28,8 @@ def selectFile(fileType, window):
     if fileType == 0:
         encryptFile = filePath
         createLabel(window, 0.5, 0.6, f'File Encrypt là {encryptFile}')
+        module.encrypt_module(filepath=filePath, user_name="abcd.txt")
+
     elif fileType == 1:
         decryptFile = filePath
         createLabel(window, 0.5, 0.6, f'File Decrypt là {decryptFile}')
@@ -31,16 +38,20 @@ def selectFile(fileType, window):
         createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
 
 # Restore the main window when the mode window is closed
+
+
 # def on_close(app, modeWindow):
 #     app.deiconify()
 #     modeWindow.destroy()
+
 
 def createModesWindow(mode, app):
     modeWindow = customtkinter.CTkToplevel()
     modeWindow.title(mode + ' mode')
     modeWindow.geometry("1000x550")
 
-    label = customtkinter.CTkLabel(master=modeWindow, text='Đây là chức năng ' + mode)
+    label = customtkinter.CTkLabel(
+        master=modeWindow, text='Đây là chức năng ' + mode)
     label.place(relx=0.5, rely=0.4, anchor=tkinter.CENTER)
 
     # Withdraw the main window
@@ -81,8 +92,8 @@ def decrypt(app):
 def choose_encrypt_decrypt(app):
     createLabel(app, 0.5, 0.35, 'Chọn chức năng mong muốn')
 
-    createButton(app, 0.5, 0.45, 'Encrypt', command = lambda:encrypt(app))
-    createButton(app, 0.5, 0.55, 'Decrypt', command = lambda:decrypt(app))
+    createButton(app, 0.5, 0.45, 'Encrypt', command=lambda: encrypt(app))
+    createButton(app, 0.5, 0.55, 'Decrypt', command=lambda: decrypt(app))
 
 
 def main():
@@ -96,6 +107,7 @@ def main():
     choose_encrypt_decrypt(app)
 
     app.mainloop()
+
 
 if __name__ == "__main__":
     main()
