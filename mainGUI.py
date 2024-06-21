@@ -30,7 +30,12 @@ def selectFile(fileType, window):
         KprivateFile = filePath
         createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
 
-def createModesWindow(mode):
+# Restore the main window when the mode window is closed
+def on_close(app, modeWindow):
+    app.deiconify()
+    modeWindow.destroy()
+
+def createModesWindow(mode, app):
     modeWindow = customtkinter.CTkToplevel()
     modeWindow.title(mode + ' mode')
     modeWindow.geometry("720x405")
@@ -38,25 +43,28 @@ def createModesWindow(mode):
     label = customtkinter.CTkLabel(master=modeWindow, text='Đây là chức năng ' + mode)
     label.place(relx=0.5, rely=0.4, anchor=tkinter.CENTER)
 
-    modeWindow.lift()
-    modeWindow.attributes('-topmost', True)
+    # Withdraw the main window
+    app.withdraw()
+
+
+    modeWindow.protocol("WM_DELETE_WINDOW", on_close(app, modeWindow))
 
     return modeWindow
 
-def encrypt():
+def encrypt(app):
     print('Encrypt function')
-    window = createModesWindow('Encrypt')
+    window = createModesWindow('Encrypt', app)
 
-    createButton(window, 0.5, 0.5, 'Chọn 1 file để Encrypt', command= lambda:selectFile(0, window))
+    createButton(window, 0.5, 0.5, 'Chọn 1 file để Encrypt', command = lambda:selectFile(0, window))
 
 
-def decrypt():
+def decrypt(app):
     print('Decrypt function')
-    window = createModesWindow('Decrypt')
+    window = createModesWindow('Decrypt', app)
 
-    createButton(window, 0.5, 0.5, 'Chọn 1 file để Decrypt', command= lambda:selectFile(1, window))
+    createButton(window, 0.5, 0.5, 'Chọn 1 file để Decrypt', command = lambda:selectFile(1, window))
 
-    createButton(window, 0.5, 0.7, 'Chọn file Kprivate', command= lambda:selectFile(2, window))
+    createButton(window, 0.5, 0.7, 'Chọn file Kprivate', command = lambda:selectFile(2, window))
 
 
 
@@ -64,8 +72,8 @@ def decrypt():
 def choose_encrypt_decrypt(app):
     createLabel(app, 0.5, 0.35, 'Chọn chức năng mong muốn')
 
-    createButton(app, 0.5, 0.45, 'Encrypt', encrypt)
-    createButton(app, 0.5, 0.55, 'Decrypt', decrypt)
+    createButton(app, 0.5, 0.45, 'Encrypt', command = lambda:encrypt(app))
+    createButton(app, 0.5, 0.55, 'Decrypt', command = lambda:decrypt(app))
 
 
 def main():
