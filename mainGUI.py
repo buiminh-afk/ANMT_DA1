@@ -40,9 +40,9 @@ def selectFile(fileType, window):
 # Restore the main window when the mode window is closed
 
 
-def on_close(app, modeWindow):
-    app.deiconify()
-    modeWindow.destroy()
+# def on_close(app, modeWindow):
+#     app.deiconify()
+#     modeWindow.destroy()
 
 
 def createModesWindow(mode, app):
@@ -57,7 +57,7 @@ def createModesWindow(mode, app):
     # Withdraw the main window
     app.withdraw()
 
-    modeWindow.protocol("WM_DELETE_WINDOW", on_close(app, modeWindow))
+    # modeWindow.protocol("WM_DELETE_WINDOW", on_close(app, modeWindow))
 
     return modeWindow
 

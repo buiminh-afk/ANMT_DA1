@@ -1,12 +1,10 @@
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.backends import default_backend
 import os
 
 
 def generate_aes_key():
-    key = AESGCM.generate_key(bit_length=256)  # 256-bit key
-    return key
+    return os.urandom(32)  # 256-bit key
 
 
 def encrypt_file_aes(key, input_file, output_file):
@@ -26,7 +24,7 @@ def encrypt_file_aes(key, input_file, output_file):
 
 def decrypt_file_aes(key, input_file, output_file):
     with open(input_file, 'rb') as f:
-        iv = f.read(16)
+        iv = f.read(16)  # Initialization vector
         ciphertext = f.read()
 
     cipher = Cipher(algorithms.AES(key), modes.CFB(iv),
