@@ -31,14 +31,14 @@ def selectFile(fileType, window):
         createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
 
 # Restore the main window when the mode window is closed
-def on_close(app, modeWindow):
-    app.deiconify()
-    modeWindow.destroy()
+# def on_close(app, modeWindow):
+#     app.deiconify()
+#     modeWindow.destroy()
 
 def createModesWindow(mode, app):
     modeWindow = customtkinter.CTkToplevel()
     modeWindow.title(mode + ' mode')
-    modeWindow.geometry("720x405")
+    modeWindow.geometry("1000x550")
 
     label = customtkinter.CTkLabel(master=modeWindow, text='Đây là chức năng ' + mode)
     label.place(relx=0.5, rely=0.4, anchor=tkinter.CENTER)
@@ -47,15 +47,24 @@ def createModesWindow(mode, app):
     app.withdraw()
 
 
-    modeWindow.protocol("WM_DELETE_WINDOW", on_close(app, modeWindow))
+    def disable_close():
+        pass
+
+    modeWindow.protocol("WM_DELETE_WINDOW", disable_close)
 
     return modeWindow
+
+def goBackFunc(app, window):
+    window.destroy()
+    app.deiconify()
+    choose_encrypt_decrypt(app)
 
 def encrypt(app):
     print('Encrypt function')
     window = createModesWindow('Encrypt', app)
 
     createButton(window, 0.5, 0.5, 'Chọn 1 file để Encrypt', command = lambda:selectFile(0, window))
+    createButton(window, 0.1, 0.05, 'Quay lại', command = lambda:goBackFunc(app, window))
 
 
 def decrypt(app):
@@ -63,8 +72,8 @@ def decrypt(app):
     window = createModesWindow('Decrypt', app)
 
     createButton(window, 0.5, 0.5, 'Chọn 1 file để Decrypt', command = lambda:selectFile(1, window))
-
     createButton(window, 0.5, 0.7, 'Chọn file Kprivate', command = lambda:selectFile(2, window))
+    createButton(window, 0.1, 0.05, 'Quay lại', command = lambda:goBackFunc(app, window))
 
 
 
@@ -82,7 +91,7 @@ def main():
     app = customtkinter.CTk()
 
     app.title("Project 1 - Encryption")
-    app.geometry("800x450")
+    app.geometry("1000x550")
 
     choose_encrypt_decrypt(app)
 
