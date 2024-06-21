@@ -5,18 +5,16 @@ import aes
 import rsa
 from cryptography.hazmat.primitives import serialization
 
-folder = './test/'
 
-
-def main():
-    # Bước 1: Người dùng nhập tên tập tin cần mã hóa và tên người dùng
-    input_file = input("Nhập tên tập tin cần mã hóa: ")
-    user_name = input("Nhập tên người dùng để đặt tên cho private key: ")
-
+def encrypt_module(filepath, user_name):
     # Bước 2: Hệ thống phát sinh khóa bí mật Ks và mã hóa tập tin P thành tập tin C bằng AES
     aes_key = aes.generate_aes_key()
-    encrypted_file = input_file + '_encrypt'
-    aes.encrypt_file_aes(aes_key, input_file, encrypted_file)
+
+    # Tạo tên tập tin mã hóa theo định dạng [tên_tập_tin]_encrypt.txt
+    file_name, file_extension = os.path.splitext(filepath)
+    encrypted_file = f"{file_name}_encrypt{file_extension}"
+
+    aes.encrypt_file_aes(aes_key, filepath, encrypted_file)
 
     # Bước 3: Hệ thống phát sinh cặp khóa Kprivate và Kpublic của RSA và mã hóa khóa Ks bằng Kpublic
     private_key, public_key = rsa.generate_rsa_key_pair()
@@ -52,7 +50,7 @@ def main():
 
     # Bước 5: Hệ thống kết xuất khóa Kprivate cho người dùng thành tệp
     private_key_file = user_name + '_private_key.pem'
-    with open(folder + private_key_file, 'wb') as priv_file:
+    with open(private_key_file, 'wb') as priv_file:
         priv_file.write(private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -62,7 +60,3 @@ def main():
     print(f"Tập tin được mã hóa thành công: {encrypted_file}")
     print(f"Thông tin đã được lưu trong: {secret_file}")
     print(f"Khóa riêng tư được lưu tại: {private_key_file}")
-
-
-if __name__ == "__main__":
-    main()
