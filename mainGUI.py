@@ -19,8 +19,30 @@ def createLabel(app, x, y, text):
     label = customtkinter.CTkLabel(master=app, text=text)
     label.place(relx=x, rely=y, anchor=tkinter.CENTER)
 
+def readFile(filePath):
+    f = open(filePath, "r")
+    return f.read()
+
+def printDecryptResult(window):
+    global KprivateFile
+    global decryptFile
+    filePath = filedialog.askopenfilename()
+    if filePath:
+        print('File path: ', filePath)
+
+    KprivateFile = filePath
+    createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
+
+    resultPath = module.decrypt_module(decryptFile, KprivateFile)
+    createLabel(window, 0.5, 0.9, f'Nội dung file sau khi Decrypt: \n {readFile(resultPath)}')
 
 def selectFile(fileType, window):
+    
+    global encryptFile
+    global decryptFile
+    global KprivateFile
+
+    # printDecryptResult()
     filePath = filedialog.askopenfilename()
     if filePath:
         print('File path: ', filePath)
@@ -28,22 +50,17 @@ def selectFile(fileType, window):
     if fileType == 0:
         encryptFile = filePath
         createLabel(window, 0.5, 0.6, f'File Encrypt là {encryptFile}')
-        module.encrypt_module(filepath=filePath, user_name="abcd.txt")
+        module.encrypt_module(filepath=filePath)
 
     elif fileType == 1:
         decryptFile = filePath
         createLabel(window, 0.5, 0.6, f'File Decrypt là {decryptFile}')
-    elif fileType == 2:
-        KprivateFile = filePath
-        createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
-
-# Restore the main window when the mode window is closed
-
-
-# def on_close(app, modeWindow):
-#     app.deiconify()
-#     modeWindow.destroy()
-
+        createButton(window, 0.5, 0.7, 'Chọn file Kprivate', command = lambda:printDecryptResult(window))
+        
+        
+    # elif fileType == 2:
+    #     KprivateFile = filePath
+    #     createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
 
 def createModesWindow(mode, app):
     modeWindow = customtkinter.CTkToplevel()
@@ -83,7 +100,7 @@ def decrypt(app):
     window = createModesWindow('Decrypt', app)
 
     createButton(window, 0.5, 0.5, 'Chọn 1 file để Decrypt', command = lambda:selectFile(1, window))
-    createButton(window, 0.5, 0.7, 'Chọn file Kprivate', command = lambda:selectFile(2, window))
+    
     createButton(window, 0.1, 0.05, 'Quay lại', command = lambda:goBackFunc(app, window))
 
 

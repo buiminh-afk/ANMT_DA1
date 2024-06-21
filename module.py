@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 
 
-def encrypt_module(filepath, user_name):
+def encrypt_module(filepath):
     # Bước 2: Hệ thống phát sinh khóa bí mật Ks và mã hóa tập tin P thành tập tin C bằng AES
     aes_key = aes.generate_aes_key()
 
@@ -30,7 +30,7 @@ def encrypt_module(filepath, user_name):
     )).hexdigest()
 
     metadata = {
-        user_name: {
+        file_name: {
             "Kx": encrypted_key.hex(),  # Lưu dưới dạng hex để dễ lưu trữ
             "SHA-1": sha1_hash
         }
@@ -51,7 +51,7 @@ def encrypt_module(filepath, user_name):
         json.dump(existing_data, f, indent=4)
 
     # Bước 5: Hệ thống kết xuất khóa Kprivate cho người dùng thành tệp
-    private_key_file = user_name + '_private_key.pem'
+    private_key_file = file_name + '_private_key.pem'
     with open(private_key_file, 'wb') as priv_file:
         priv_file.write(private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -120,6 +120,8 @@ def decrypt_module(encrypted_file, private_key_file):
     aes.decrypt_file_aes(aes_key, encrypted_file, decrypted_file)
 
     print(f"Tập tin đã được giải mã thành công: {decrypted_file}")
+
+    return decrypted_file
 
 
 def main():
