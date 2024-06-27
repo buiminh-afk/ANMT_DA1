@@ -85,7 +85,7 @@ def decrypt_module(encrypted_file, private_key_file):
     secret_file = 'secret.json'
     if not os.path.exists(secret_file):
         print(f"File {secret_file} không tồn tại.")
-        return
+        return 0, f"File {secret_file} không tồn tại."
 
     with open(secret_file, 'r') as f:
         secret_data = json.load(f)
@@ -101,7 +101,7 @@ def decrypt_module(encrypted_file, private_key_file):
 
     if user_name is None:
         print("Không tìm thấy khóa tương ứng trong secret.json.")
-        return
+        return 0, "Không tìm thấy khóa tương ứng trong secret.json."
 
     # Bước 4: Giải mã khóa AES bằng khóa riêng tư
     encrypted_key = bytes.fromhex(encrypted_key_hex)
@@ -120,8 +120,7 @@ def decrypt_module(encrypted_file, private_key_file):
     aes.decrypt_file_aes(aes_key, encrypted_file, decrypted_file)
 
     print(f"Tập tin đã được giải mã thành công: {decrypted_file}")
-
-    return decrypted_file
+    return 1, decrypted_file
 
 
 def main():

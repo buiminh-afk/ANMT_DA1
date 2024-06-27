@@ -33,8 +33,11 @@ def printDecryptResult(window):
     KprivateFile = filePath
     createLabel(window, 0.5, 0.8, f'File Kprivate là {KprivateFile}')
 
-    resultPath = module.decrypt_module(decryptFile, KprivateFile)
-    createLabel(window, 0.5, 0.9, f'Nội dung file sau khi Decrypt: \n {readFile(resultPath)}')
+    status, resultPath = module.decrypt_module(decryptFile, KprivateFile)
+    if status == 1:
+        createLabel(window, 0.5, 0.9, f'Nội dung file sau khi Decrypt: \n {readFile(resultPath)}')
+    else:
+        createLabel(window, 0.5, 0.9, resultPath)
 
 def selectFile(fileType, window):
     
