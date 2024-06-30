@@ -8,6 +8,22 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 
 
+def hash_private_key_sha1(private_key):
+    return hashlib.sha1(private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption()
+    )).hexdigest()
+
+
+def hash_private_key_sha256(private_key):
+    return hashlib.sha256(private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption()
+    )).hexdigest()
+
+
 def encrypt_module(filepath):
     # Bước 2: Hệ thống phát sinh khóa bí mật Ks và mã hóa tập tin P thành tập tin C bằng AES
     aes_key = aes.generate_aes_key()
@@ -23,11 +39,13 @@ def encrypt_module(filepath):
     encrypted_key = rsa.encrypt_string_rsa(public_key, aes_key.hex())
 
     # Bước 4: Hệ thống lưu lại chuỗi Kx kèm theo giá trị hash SHA-1 của Kprivate vào secret.json
-    sha1_hash = hashlib.sha1(private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    )).hexdigest()
+    # sha1_hash = hashlib.sha1(private_key.private_bytes(
+    #     encoding=serialization.Encoding.PEM,
+    #     format=serialization.PrivateFormat.TraditionalOpenSSL,
+    #     encryption_algorithm=serialization.NoEncryption()
+    # )).hexdigest()
+
+    sha1_hash = hash_private_key_sha1(private_key=private_key)
 
     metadata = {
         file_name: {
@@ -121,12 +139,3 @@ def decrypt_module(encrypted_file, private_key_file):
 
     print(f"Tập tin đã được giải mã thành công: {decrypted_file}")
     return 1, decrypted_file
-
-
-def main():
-    decrypt_module(
-        'C:\Tài liệu\An ninh mang tinh\ANMT_DA1\\test\\test_encrypt.txt', 'C:\Tài liệu\An ninh mang tinh\ANMT_DA1\\abcd.txt_private_key.pem')
-
-
-if __name__ == "__main__":
-    main()
